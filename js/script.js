@@ -1,10 +1,11 @@
 const grid = document.getElementById("grid")
 const input = document.getElementById("input")
+const mapOccurrences = new Map()
 
 const MAX_NUMBER_ROWS = 6
 const MAX_NUMBER_CELL = 5
 
-const secretWord = "URNAS"
+const secretWord = "CARRO"
 
 let attempt = 1
 
@@ -18,6 +19,7 @@ function initGrid() {
 
 		createCell(row, rowIndex)
 	}
+	countOccurrences()
 }
 
 function createCell(row, rowIndex) {
@@ -42,8 +44,13 @@ function insertLetter(letter) {
 	let row = document.getElementById(`row-${attempt}`)
 
 	let cell = row.childNodes[nextLetter]
+	cell.style.animation = "size-up 0.1s linear"
+
 	cell.textContent = letter
 	nextLetter++
+	setTimeout(() => {
+		cell.style.animation = ""
+	}, 100)
 }
 
 function deleteLetter() {
@@ -60,12 +67,20 @@ function checkGuess() {
 		return
 	}
 
+	countOccurrences()
+
 	let row = document.getElementById(`row-${attempt}`)
+
 	for (let pos = 0; pos < row.childNodes.length; pos++) {
 		let cell = row.childNodes[pos]
 		cell.style.backgroundColor = validateColor(cell, pos)
 		cell.classList.add("inative")
 		cell.classList.remove("row-active")
+
+		let delay = 350 * pos
+		setTimeout(() => {
+			cell.style.animation = "spin2 0.35s linear"
+		}, delay)
 	}
 
 	attempt++
@@ -78,12 +93,25 @@ function checkGuess() {
 	}
 }
 
-function validateColor(cell, pos) {
-	let color = ""
+function countOccurrences() {
+	for (let letter of secretWord)
+		mapOccurrences.set(letter, secretWord.split(letter).length - 1)
+}
 
-	if (cell.textContent === secretWord[pos]) color = "#3AA394"
-	else if (secretWord.match(cell.textContent)) color = "#D3AD69"
-	else color = "#312A2C"
+function validateColor(cell, pos) {
+	let color = "#312A2C"
+
+	if (
+		secretWord.match(cell.textContent) &&
+		mapOccurrences.get(cell.textContent) > 0
+	) {
+		color = cell.textContent === secretWord[pos] ? "#3AA394" : "#D3AD69"
+
+		mapOccurrences.set(
+			cell.textContent,
+			mapOccurrences.get(cell.textContent) - 1
+		)
+	}
 
 	return color
 }
@@ -108,7 +136,7 @@ document.addEventListener(
 		}
 
 		let found = pressedKey.match(/[a-z]/gi)
-		if (!found || found.length > 1) return
+		if (!found || pressedKey.length > 1) return
 		else insertLetter(pressedKey.toUpperCase())
 	},
 	false
