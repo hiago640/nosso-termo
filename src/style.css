@@ -1,26 +1,31 @@
+
+
 body {
     background-color: #6e5c62;
+    font-family: 'Nunito', sans-serif;
 }
 
 .row {
     /* border: 1px solid black; */
-    padding: 50px;
-    margin-bottom: 60px;
+    padding: 42.5px;
     justify-content: space;
 }
 
 .cell{
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
 
-    margin: 5px 6px;
+    margin: 2.5px 2.5px;
     float: left;
+    display: flex;
 
-    font-size: 80px;
+    font-size: 45px;
     border-radius: 10px;
-    text-align: center;
+    justify-content: center;
     font-weight: bold;
     color: white;
+    align-items: center;
+    text-transform: uppercase;
 
 }
 
@@ -30,4 +35,12 @@ body {
 
 .ative {
     border: 1px solid black;
+}
+
+.row-active {
+    box-shadow:0px 0px 0px 8px #4c4347 inset;
+}
+
+.edit {
+    box-shadow:0px 0px 0px 20px #4c4347 inset;
 }
