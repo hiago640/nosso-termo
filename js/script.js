@@ -1,100 +1,117 @@
-const grid = document.getElementById("grid");
-const input = document.getElementById("input");
+const grid = document.getElementById("grid")
+const input = document.getElementById("input")
 
-const MAX_NUMBER_ROWS = 6;
-const MAX_NUMBER_CELL = 5;
+const MAX_NUMBER_ROWS = 6
+const MAX_NUMBER_CELL = 5
 
-let attempt = 1;
+const secretWord = "URNAS"
+
+let attempt = 1
 
 function initGrid() {
 	for (let rowIndex = 1; rowIndex <= MAX_NUMBER_ROWS; rowIndex++) {
-		let row = document.createElement("div");
-		row.setAttribute("class", "row");
-		row.setAttribute("id", `row-${rowIndex}`);
+		let row = document.createElement("div")
+		row.setAttribute("class", "row")
+		row.setAttribute("id", `row-${rowIndex}`)
 
-		grid.appendChild(row);
+		grid.appendChild(row)
 
-		createCell(row, rowIndex);
+		createCell(row, rowIndex)
 	}
 }
 
 function createCell(row, rowIndex) {
 	for (let i = 1; i <= MAX_NUMBER_CELL; i++) {
-		let cell = document.createElement("div");
-		cell.setAttribute("class", "cell");
-		cell.setAttribute("id", `cell-${rowIndex}-${i}`);
+		let cell = document.createElement("div")
+		cell.setAttribute("class", "cell")
+		cell.setAttribute("id", `cell-${rowIndex}-${i}`)
 
-		if (rowIndex != 1) cell.setAttribute("class", "cell inative");
+		if (rowIndex != 1) cell.classList.add("inative")
+		else cell.classList.add("row-active")
 
-		row.appendChild(cell);
+		row.appendChild(cell)
 	}
 }
 
-initGrid();
-let nextLetter = 0;
+let nextLetter = 0
 
 function insertLetter(letter) {
-	let row = document.getElementById(`row-${attempt}`);
-	console.log("entro");
+	console.log(nextLetter)
+	if (nextLetter >= 5) return
 
-	let cell = row.childNodes[nextLetter];
-	cell.textContent = letter;
-	nextLetter++;
+	let row = document.getElementById(`row-${attempt}`)
+
+	let cell = row.childNodes[nextLetter]
+	cell.textContent = letter
+	nextLetter++
 }
 
-/*
-function insertLetter(keyPressed) {
-	if (nextLetter === MAX_NUMBER_CELL) {
-		attempt++;
-		nextLetter = 0;
+function deleteLetter() {
+	let row = document.getElementById(`row-${attempt}`)
+
+	nextLetter--
+	let cell = row.childNodes[nextLetter]
+	cell.textContent = ""
+}
+
+function checkGuess() {
+	if (nextLetter !== 5) {
+		alert("Não é uma palavra válida")
+		return
 	}
 
-	if (attempt > MAX_NUMBER_ROWS) return;
-
-	let row = document.getElementById(`row-${attempt}`);
-	let cell;
-
-	if (keyPressed == "Backspace" || keyPressed == "Delete") {
-		cell = row.childNodes[nextLetter].classList.remove("ative");
-
-		if (nextLetter != 0) {
-			nextLetter--;
-			cell = row.childNodes[nextLetter];
-			cell.textContent = "";
-			cell.classList.add("ative");
-		}
-	} else {
-		cell = row.childNodes[nextLetter];
-		cell.classList.add("ative");
-		row.childNodes[nextLetter].textContent = keyPressed.toUpperCase();
-		//cell.classList.remove('ative')
-		nextLetter++;
+	let row = document.getElementById(`row-${attempt}`)
+	for (let pos = 0; pos < row.childNodes.length; pos++) {
+		let cell = row.childNodes[pos]
+		cell.style.backgroundColor = validateColor(cell, pos)
+		cell.classList.add("inative")
+		cell.classList.remove("row-active")
 	}
-}*/
-document.addEventListener("keyup", (e) => {
-	
+
+	attempt++
+	nextLetter = 0
+
+	let nextRow = document.getElementById(`row-${attempt}`)
+	for (let cell of nextRow.childNodes) {
+		cell.classList.add("row-active")
+		cell.classList.remove("inative")
+	}
+}
+
+function validateColor(cell, pos) {
+	let color = ""
+
+	if (cell.textContent === secretWord[pos]) color = "#3AA394"
+	else if (secretWord.match(cell.textContent)) color = "#D3AD69"
+	else color = "#312A2C"
+
+	return color
+}
+
+document.addEventListener(
+	"keydown",
+	(e) => {
 		if (attempt === 7) {
-			return;
+			return
 		}
 
 		let pressedKey = String(e.key)
 
 		if (pressedKey === "Enter") {
-			//checkGuess()
-			return;
+			checkGuess()
+			return
 		}
 
-		if (pressedKey === "Backspace") {
-			//deleteLetter()
-			return;
+		if (pressedKey === "Backspace" && nextLetter !== 0) {
+			deleteLetter()
+			return
 		}
 
 		let found = pressedKey.match(/[a-z]/gi)
-		if (!found || found.length > 1) {
-			return
-		} else {
-			insertLetter(pressedKey)
-		}
+		if (!found || found.length > 1) return
+		else insertLetter(pressedKey.toUpperCase())
 	},
 	false
-);
+)
+
+initGrid()
