@@ -5,7 +5,7 @@ const mapOccurrences = new Map()
 const MAX_NUMBER_ROWS = 6
 const MAX_NUMBER_CELL = 5
 
-const secretWord = "CARRO"
+const secretWord = "TERMO"
 
 let attempt = 1
 
@@ -73,12 +73,12 @@ function checkGuess() {
 
 	for (let pos = 0; pos < row.childNodes.length; pos++) {
 		let cell = row.childNodes[pos]
-		cell.style.backgroundColor = validateColor(cell, pos)
 		cell.classList.add("inative")
 		cell.classList.remove("row-active")
 
 		let delay = 350 * pos
 		setTimeout(() => {
+			cell.style.backgroundColor = validateColor(cell, pos)
 			cell.style.animation = "spin2 0.35s linear"
 		}, delay)
 	}
