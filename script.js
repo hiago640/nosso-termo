@@ -83,14 +83,16 @@ function checkGuess() {
 		}, delay)
 	}
 
-	attempt++
-	nextLetter = 0
-
-	let nextRow = document.getElementById(`row-${attempt}`)
-	for (let cell of nextRow.childNodes) {
-		cell.classList.add("row-active")
-		cell.classList.remove("inative")
-	}
+	setTimeout(() => {
+		attempt++
+		nextLetter = 0
+	
+		let nextRow = document.getElementById(`row-${attempt}`)
+		for (let cell of nextRow.childNodes) {
+			cell.classList.add("row-active")
+			cell.classList.remove("inative")
+		}
+	}, 1750)
 }
 
 function countOccurrences() {
