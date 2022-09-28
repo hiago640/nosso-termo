@@ -1,13 +1,76 @@
+const WORDS = [
+	'IMBIGO',
+	'MINDIGO',
+	'ADEVOGADO',
+	'MORTANDELA',
+	'IORGUTE',
+	'GUSPE',
+	'ASTERISTICO',
+	'CELEBRO',
+	'BRUSINHA',
+	'PAIAÇO',
+	'BICABORNATO',
+	'FAZESSE',
+	'ARVRE',
+	'GALFO',
+	'REJUVELHECER',
+	'INGREJA',
+	'LARGATA',
+	'LARGATIXA',
+	'TEVELISAO',
+	'PIRUCA',
+	'MOLUSCULO',
+	'LOSÂNGULO',
+	'COCRANTE',
+	'COCRETE',
+	'DIBRE',
+	'INGUAL',
+	'PIRULA',
+	'BISORO',
+	'TOCHICO',
+	'CISNEI',
+	'CABELELEIRO',
+	'CADARÇO',
+	'SOMBRANCELHA',
+	'CONHECIDENCIA',
+	'GOGUMELO',
+	'ENTRETERIMENTO',
+	'FILGO',
+	'INDIOTA',
+	'MENAS',
+	'TOMARE',
+	'SEJE',
+	'PROVALECER',
+	'ESTEJE',
+	'EXCESSAO',
+	'TRABISSEIRO',
+	'TAUBA',
+	'MECHER',
+	'ENXER',
+	'MUNDIÇA',
+	'FISSO',
+	'ARREDA'
+]
+
 const grid = document.getElementById("grid")
 const input = document.getElementById("input")
 const mapOccurrences = new Map()
 
-const MAX_NUMBER_ROWS = 6
-const MAX_NUMBER_CELL = 5
+const date = new Date();
 
-const secretWord = "TERMO"
+const secretWord = WORDS[Math.floor(Math.random() * WORDS.length)]
+
+const MAX_NUMBER_ROWS = numberAttempts()
+let MAX_NUMBER_CELL = secretWord.length
 
 let attempt = 1
+
+function numberAttempts() {
+	let minumumAttempt = 6
+
+	return Math.round(((secretWord.length <= 7) ? minumumAttempt : (minumumAttempt/2) + (secretWord.length / 2) - 1));
+}
+
 
 function initGrid() {
 	for (let rowIndex = 1; rowIndex <= MAX_NUMBER_ROWS; rowIndex++) {
@@ -39,7 +102,7 @@ let nextLetter = 0
 
 function insertLetter(letter) {
 	console.log(nextLetter)
-	if (nextLetter >= 5) return
+	if (nextLetter >= MAX_NUMBER_CELL) return
 
 	let row = document.getElementById(`row-${attempt}`)
 
@@ -62,7 +125,7 @@ function deleteLetter() {
 }
 
 function checkGuess() {
-	if (nextLetter !== 5) {
+	if (nextLetter !== MAX_NUMBER_CELL) {
 		alert("Não é uma palavra válida")
 		return
 	}
@@ -121,7 +184,7 @@ function validateColor(cell, pos) {
 document.addEventListener(
 	"keydown",
 	(e) => {
-		if (attempt === 7) {
+		if (attempt === (MAX_NUMBER_ROWS+1)) {
 			return
 		}
 
