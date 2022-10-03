@@ -85,6 +85,9 @@ function initGrid() {
 		grid.appendChild(row)
 
 		createCell(row, rowIndex)
+		
+		if(rowIndex === 1)
+			row.childNodes[0].classList.add("edit")
 	}
 	countOccurrences()
 }
@@ -110,8 +113,10 @@ function insertLetter(letter) {
 	let row = document.getElementById(`row-${attempt}`)
 
 	let cell = row.childNodes[nextLetter]
+	row.childNodes[nextLetter].classList.add("edit")
+	
 	cell.style.animation = "size-up 0.1s linear"
-
+	
 	cell.textContent = letter
 	nextLetter++
 	setTimeout(() => {
@@ -128,6 +133,7 @@ function deleteLetter() {
 	nextLetter--
 	let cell = row.childNodes[nextLetter]
 	cell.textContent = ""
+	cell.classList.remove("edit")
 	console.log(inputLetters)
 }
 
@@ -145,6 +151,7 @@ function checkGuess() {
 		let cell = row.childNodes[pos]
 		cell.classList.add("inative")
 		cell.classList.remove("row-active")
+		cell.classList.remove("edit")
 
 		let delay = 350 * pos
 		setTimeout(() => {
@@ -215,21 +222,29 @@ document.addEventListener(
 			return
 		}
 
+		let row = document.getElementById(`row-${attempt}`)
+		
 		let pressedKey = String(e.key)
-
+		
 		if (pressedKey === "Enter") {
 			checkGuess()
 			return
 		}
-
+		
 		if (pressedKey === "Backspace" && nextLetter !== 0) {
 			deleteLetter()
 			return
 		}
-
+		
 		let found = pressedKey.match(/[a-z]/gi)
 		if (!found || pressedKey.length > 1) return
-		else insertLetter(pressedKey.toUpperCase())
+		else {
+			if (nextLetter < MAX_NUMBER_CELL)
+				row.childNodes[nextLetter].classList.remove("edit")
+
+			insertLetter(pressedKey.toUpperCase())
+		}
+
 	},
 	false
 )
