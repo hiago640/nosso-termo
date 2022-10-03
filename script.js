@@ -155,7 +155,7 @@ function checkGuess() {
 			cell.classList.add("row-active")
 			cell.classList.remove("inative")
 		}
-	}, 1750)
+	}, 350 * secretWord.length)
 }
 
 function countOccurrences() {
