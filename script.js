@@ -1,62 +1,63 @@
 const WORDS = [
-	'IMBIGO',
-	'MINDIGO',
-	'ADEVOGADO',
-	'MORTANDELA',
-	'IORGUTE',
-	'GUSPE',
-	'ASTERISTICO',
-	'CELEBRO',
-	'BRUSINHA',
-	'PAIAÇO',
-	'BICABORNATO',
-	'FAZESSE',
-	'ARVRE',
-	'GALFO',
-	'REJUVELHECER',
-	'INGREJA',
-	'LARGATA',
-	'LARGATIXA',
-	'TEVELISAO',
-	'PIRUCA',
-	'MOLUSCULO',
-	'LOSÂNGULO',
-	'COCRANTE',
-	'COCRETE',
-	'DIBRE',
-	'INGUAL',
-	'PIRULA',
-	'BISORO',
-	'TOCHICO',
-	'CISNEI',
-	'CABELELEIRO',
-	'CADARÇO',
-	'SOMBRANCELHA',
-	'CONHECIDENCIA',
-	'GOGUMELO',
-	'ENTRETERIMENTO',
-	'FILGO',
-	'INDIOTA',
-	'MENAS',
-	'TOMARE',
-	'SEJE',
-	'PROVALECER',
-	'ESTEJE',
-	'EXCESSAO',
-	'TRABISSEIRO',
-	'TAUBA',
-	'MECHER',
-	'ENXER',
-	'MUNDIÇA',
-	'FISSO',
-	'ARREDA'
+	"IMBIGO",
+	"MINDIGO",
+	"ADEVOGADO",
+	"MORTANDELA",
+	"IORGUTE",
+	"GUSPE",
+	"ASTERISTICO",
+	"CELEBRO",
+	"BRUSINHA",
+	"PAIAÇO",
+	"BICABORNATO",
+	"FAZESSE",
+	"ARVRE",
+	"GALFO",
+	"REJUVELHECER",
+	"INGREJA",
+	"LARGATA",
+	"LARGATIXA",
+	"TEVELISAO",
+	"PIRUCA",
+	"MOLUSCULO",
+	"LOSÂNGULO",
+	"COCRANTE",
+	"COCRETE",
+	"DIBRE",
+	"INGUAL",
+	"PIRULA",
+	"BISORO",
+	"TOCHICO",
+	"CISNEI",
+	"CABELELEIRO",
+	"CADARÇO",
+	"SOMBRANCELHA",
+	"CONHECIDENCIA",
+	"GOGUMELO",
+	"ENTRETERIMENTO",
+	"FILGO",
+	"INDIOTA",
+	"MENAS",
+	"TOMARE",
+	"SEJE",
+	"PROVALECER",
+	"ESTEJE",
+	"EXCESSAO",
+	"TRABISSEIRO",
+	"TAUBA",
+	"MECHER",
+	"ENXER",
+	"MUNDIÇA",
+	"FISSO",
+	"ARREDA",
 ]
 
 const grid = document.getElementById("grid")
 const input = document.getElementById("input")
 const mapOccurrences = new Map()
+const inputLetters = []
 
-const date = new Date();
+const date = new Date()
 
 const secretWord = WORDS[Math.floor(Math.random() * WORDS.length)]
 
@@ -68,9 +69,12 @@ let attempt = 1
 function numberAttempts() {
 	let minumumAttempt = 6
 
-	return Math.round(((secretWord.length <= 7) ? minumumAttempt : (minumumAttempt/2) + (secretWord.length / 2) - 1));
+	return Math.round(
+		secretWord.length <= 7
+			? minumumAttempt
+			: minumumAttempt / 2 + secretWord.length / 2 - 1
+	)
 }
-
 
 function initGrid() {
 	for (let rowIndex = 1; rowIndex <= MAX_NUMBER_ROWS; rowIndex++) {
@@ -101,7 +105,6 @@ function createCell(row, rowIndex) {
 let nextLetter = 0
 
 function insertLetter(letter) {
-	console.log(nextLetter)
 	if (nextLetter >= MAX_NUMBER_CELL) return
 
 	let row = document.getElementById(`row-${attempt}`)
@@ -114,19 +117,23 @@ function insertLetter(letter) {
 	setTimeout(() => {
 		cell.style.animation = ""
 	}, 100)
+	inputLetters.push(letter)
+	console.log(inputLetters)
 }
 
 function deleteLetter() {
 	let row = document.getElementById(`row-${attempt}`)
+	inputLetters.pop()
 
 	nextLetter--
 	let cell = row.childNodes[nextLetter]
 	cell.textContent = ""
+	console.log(inputLetters)
 }
 
 function checkGuess() {
 	if (nextLetter !== MAX_NUMBER_CELL) {
-		alert("Não é uma palavra válida")
+		toastr.error("Não é uma palavra válida.")
 		return
 	}
 
@@ -146,14 +153,32 @@ function checkGuess() {
 		}, delay)
 	}
 
+	let correctLetters = 0
+	for (let pos = 0; pos < secretWord.length; pos++) {
+		if (secretWord[pos] === inputLetters[pos]) correctLetters++
+	}
+
+	validadeCorrectWord(correctLetters)
+	lastAttempt()
+	correctLetters = 0
+}
+
+function validadeCorrectWord(correctLetters) {
 	setTimeout(() => {
-		attempt++
-		nextLetter = 0
-	
-		let nextRow = document.getElementById(`row-${attempt}`)
-		for (let cell of nextRow.childNodes) {
-			cell.classList.add("row-active")
-			cell.classList.remove("inative")
+		if (correctLetters === secretWord.length) {
+			toastr.success("Cê acertou a palavra do dia fioteeee!")
+			return
+		} else {
+			attempt++
+			nextLetter = 0
+
+			let nextRow = document.getElementById(`row-${attempt}`)
+			for (let cell of nextRow.childNodes) {
+				cell.classList.add("row-active")
+				cell.classList.remove("inative")
+			}
+
+			inputLetters.length = 0
 		}
 	}, 350 * secretWord.length)
 }
@@ -184,7 +209,9 @@ function validateColor(cell, pos) {
 document.addEventListener(
 	"keydown",
 	(e) => {
-		if (attempt === (MAX_NUMBER_ROWS+1)) {
+		if (attempt === MAX_NUMBER_ROWS + 1) {
+			toastr.error("Você não conseguiu acertar a palavra do dia!")
+			toastr.info(`A Palavra correta é: "${secretWord}"`)
 			return
 		}
 
