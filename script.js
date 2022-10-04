@@ -111,30 +111,35 @@ function insertLetter(letter) {
 	if (nextLetter >= MAX_NUMBER_CELL) return
 
 	let row = document.getElementById(`row-${attempt}`)
-
-	let cell = row.childNodes[nextLetter]
-	row.childNodes[nextLetter].classList.add("edit")
 	
+	let cell = row.childNodes[nextLetter]
 	cell.style.animation = "size-up 0.1s linear"
 	
 	cell.textContent = letter
+	cell.classList.remove("edit")
+
 	nextLetter++
+
 	setTimeout(() => {
 		cell.style.animation = ""
 	}, 100)
 	inputLetters.push(letter)
-	console.log(inputLetters)
+	
+	if(nextLetter !== MAX_NUMBER_CELL)
+		row.childNodes[nextLetter].classList.add("edit")
 }
 
 function deleteLetter() {
 	let row = document.getElementById(`row-${attempt}`)
 	inputLetters.pop()
 
+	if(nextLetter !== MAX_NUMBER_ROWS)
+		row.childNodes[nextLetter].classList.remove("edit")
+	
 	nextLetter--
 	let cell = row.childNodes[nextLetter]
 	cell.textContent = ""
-	cell.classList.remove("edit")
-	console.log(inputLetters)
+	cell.classList.add("edit")
 }
 
 function checkGuess() {
@@ -166,7 +171,6 @@ function checkGuess() {
 	}
 
 	validadeCorrectWord(correctLetters)
-	lastAttempt()
 	correctLetters = 0
 }
 
@@ -239,9 +243,6 @@ document.addEventListener(
 		let found = pressedKey.match(/[a-z]/gi)
 		if (!found || pressedKey.length > 1) return
 		else {
-			if (nextLetter < MAX_NUMBER_CELL)
-				row.childNodes[nextLetter].classList.remove("edit")
-
 			insertLetter(pressedKey.toUpperCase())
 		}
 
