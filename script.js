@@ -133,7 +133,7 @@ function deleteLetter() {
 	let row = document.getElementById(`row-${attempt}`)
 	inputLetters.pop()
 
-	if(nextLetter !== MAX_NUMBER_ROWS)
+	if(nextLetter !== MAX_NUMBER_CELL && nextLetter > 0)
 		row.childNodes[nextLetter].classList.remove("edit")
 	
 	nextLetter--
@@ -143,7 +143,7 @@ function deleteLetter() {
 }
 
 function checkGuess() {
-	if (nextLetter !== MAX_NUMBER_CELL) {
+	if (nextLetter !== MAX_NUMBER_CELL || inputLetters.length !== MAX_NUMBER_CELL) {
 		toastr.error("Não é uma palavra válida.")
 		return
 	}
@@ -226,8 +226,6 @@ document.addEventListener(
 			return
 		}
 
-		let row = document.getElementById(`row-${attempt}`)
-		
 		let pressedKey = String(e.key)
 		
 		if (pressedKey === "Enter") {
@@ -239,6 +237,8 @@ document.addEventListener(
 			deleteLetter()
 			return
 		}
+
+		keyArrows(pressedKey)
 		
 		let found = pressedKey.match(/[a-z]/gi)
 		if (!found || pressedKey.length > 1) return
@@ -249,5 +249,28 @@ document.addEventListener(
 	},
 	false
 )
+
+function keyArrows (pressedKey) {
+	let row = document.getElementById(`row-${attempt}`)
+	
+	if(pressedKey === 'ArrowLeft'){
+		if(nextLetter !== MAX_NUMBER_CELL && nextLetter > 0){
+			row.childNodes[nextLetter].classList.remove("edit")
+			nextLetter--
+			row.childNodes[nextLetter].classList.add("edit")
+		}
+	}
+	else if(pressedKey === 'ArrowRight'){
+		if((nextLetter !== MAX_NUMBER_CELL)){
+			if((nextLetter+1) !== MAX_NUMBER_CELL){
+				row.childNodes[nextLetter].classList.remove("edit")
+				nextLetter++
+				row.childNodes[nextLetter].classList.add("edit")
+			}
+		}
+
+	}
+	else return
+}
 
 initGrid()
