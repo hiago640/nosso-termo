@@ -129,28 +129,43 @@ function insertLetter(letter) {
 		row.childNodes[nextLetter].classList.add("edit")
 }
 
-function deleteLetter() {
-	let row = document.getElementById(`row-${attempt}`)
-	inputLetters.pop()
+let isChecking = false
 
-	if(nextLetter !== MAX_NUMBER_CELL && nextLetter > 0)
-		row.childNodes[nextLetter].classList.remove("edit")
+function deleteLetter() {
+	if (!isChecking) {
+		let row = document.getElementById(`row-${attempt}`)
+		inputLetters.pop()
 	
-	nextLetter--
-	let cell = row.childNodes[nextLetter]
-	cell.textContent = ""
-	cell.classList.add("edit")
+		if(nextLetter !== MAX_NUMBER_CELL && nextLetter > 0)
+			row.childNodes[nextLetter].classList.remove("edit")
+		
+		nextLetter--
+		let cell = row.childNodes[nextLetter]
+		cell.textContent = ""
+		cell.classList.add("edit")
+	}
 }
 
 function checkGuess() {
+
 	if (nextLetter !== MAX_NUMBER_CELL || inputLetters.length !== MAX_NUMBER_CELL) {
 		toastr.error("Não é uma palavra válida.")
+		isChecking = false
 		return
 	}
-
+	
+	isChecking = true
+	
 	countOccurrences()
 
 	let row = document.getElementById(`row-${attempt}`)
+	
+	let correctLetters = 0
+	for (let pos = 0; pos < secretWord.length; pos++) {
+		if (secretWord[pos] === inputLetters[pos]) correctLetters++
+	}
+
+	validadeCorrectWord(correctLetters)
 
 	for (let pos = 0; pos < row.childNodes.length; pos++) {
 		let cell = row.childNodes[pos]
@@ -160,17 +175,12 @@ function checkGuess() {
 
 		let delay = 350 * pos
 		setTimeout(() => {
-			cell.style.backgroundColor = validateColor(cell, pos)
+			let letterColor = validateColor(cell, pos)
+			cell.style.backgroundColor = letterColor
 			cell.style.animation = "spin2 0.35s linear"
 		}, delay)
 	}
 
-	let correctLetters = 0
-	for (let pos = 0; pos < secretWord.length; pos++) {
-		if (secretWord[pos] === inputLetters[pos]) correctLetters++
-	}
-
-	validadeCorrectWord(correctLetters)
 	correctLetters = 0
 }
 
@@ -191,6 +201,7 @@ function validadeCorrectWord(correctLetters) {
 
 			inputLetters.length = 0
 		}
+		isChecking = false
 	}, 350 * secretWord.length)
 }
 
@@ -217,6 +228,21 @@ function validateColor(cell, pos) {
 	return color
 }
 
+document.getElementById("keyboard-cont").addEventListener("click", (e) => {
+    const target = e.target
+    
+    if (!target.classList.contains("keyboard-button")) {
+        return
+    }
+    let key = target.textContent
+
+    if (key === "Del") {
+        key = "Backspace"
+    } 
+
+    document.dispatchEvent(new KeyboardEvent("keydown", {'key': key}))
+})
+
 document.addEventListener(
 	"keydown",
 	(e) => {
@@ -229,7 +255,8 @@ document.addEventListener(
 		let pressedKey = String(e.key)
 		
 		if (pressedKey === "Enter") {
-			checkGuess()
+			if(!isChecking)
+				checkGuess()
 			return
 		}
 		
@@ -266,6 +293,8 @@ function keyArrows (pressedKey) {
 				row.childNodes[nextLetter].classList.remove("edit")
 				nextLetter++
 				row.childNodes[nextLetter].classList.add("edit")
+			// } else if (nextLetter === MAX_NUMBER_CELL){
+			// 	nextLetter = 0
 			}
 		}
 
