@@ -105,28 +105,33 @@ function createCell(row, rowIndex) {
 	}
 }
 
-let nextLetter = 0
+
+let letterIndex = 0
 
 function insertLetter(letter) {
-	if (nextLetter >= MAX_NUMBER_CELL) return
+	if (letterIndex+1 > MAX_NUMBER_CELL) return
 
+	console.log(letterIndex+1);
+	console.log(MAX_NUMBER_CELL);
+	
 	let row = document.getElementById(`row-${attempt}`)
 	
-	let cell = row.childNodes[nextLetter]
+	let cell = row.childNodes[letterIndex]
 	cell.style.animation = "size-up 0.1s linear"
 	
 	cell.textContent = letter
 	cell.classList.remove("edit")
 
-	nextLetter++
+	letterIndex++
 
 	setTimeout(() => {
 		cell.style.animation = ""
 	}, 100)
+	
 	inputLetters.push(letter)
 	
-	if(nextLetter !== MAX_NUMBER_CELL)
-		row.childNodes[nextLetter].classList.add("edit")
+	if(letterIndex !== MAX_NUMBER_CELL)
+		row.childNodes[letterIndex].classList.add("edit")
 }
 
 let isChecking = false
@@ -136,11 +141,11 @@ function deleteLetter() {
 		let row = document.getElementById(`row-${attempt}`)
 		inputLetters.pop()
 	
-		if(nextLetter !== MAX_NUMBER_CELL && nextLetter > 0)
-			row.childNodes[nextLetter].classList.remove("edit")
+		if(letterIndex !== MAX_NUMBER_CELL && letterIndex > 0)
+			row.childNodes[letterIndex].classList.remove("edit")
 		
-		nextLetter--
-		let cell = row.childNodes[nextLetter]
+		letterIndex--
+		let cell = row.childNodes[letterIndex]
 		cell.textContent = ""
 		cell.classList.add("edit")
 	}
@@ -148,7 +153,7 @@ function deleteLetter() {
 
 function checkGuess() {
 
-	if (nextLetter !== MAX_NUMBER_CELL || inputLetters.length !== MAX_NUMBER_CELL) {
+	if (letterIndex !== MAX_NUMBER_CELL || inputLetters.length !== MAX_NUMBER_CELL) {
 		toastr.error("Não é uma palavra válida.")
 		isChecking = false
 		return
@@ -191,9 +196,11 @@ function validadeCorrectWord(correctLetters) {
 			return
 		} else {
 			attempt++
-			nextLetter = 0
+			letterIndex = 0
 
 			let nextRow = document.getElementById(`row-${attempt}`)
+			nextRow.childNodes[0].classList.add("edit")
+
 			for (let cell of nextRow.childNodes) {
 				cell.classList.add("row-active")
 				cell.classList.remove("inative")
@@ -260,7 +267,7 @@ document.addEventListener(
 			return
 		}
 		
-		if (pressedKey === "Backspace" && nextLetter !== 0) {
+		if (pressedKey === "Backspace" && letterIndex !== 0) {
 			deleteLetter()
 			return
 		}
@@ -281,20 +288,18 @@ function keyArrows (pressedKey) {
 	let row = document.getElementById(`row-${attempt}`)
 	
 	if(pressedKey === 'ArrowLeft'){
-		if(nextLetter !== MAX_NUMBER_CELL && nextLetter > 0){
-			row.childNodes[nextLetter].classList.remove("edit")
-			nextLetter--
-			row.childNodes[nextLetter].classList.add("edit")
+		if(letterIndex !== MAX_NUMBER_CELL && letterIndex > 0){
+			row.childNodes[letterIndex].classList.remove("edit")
+			letterIndex--
+			row.childNodes[letterIndex].classList.add("edit")
 		}
 	}
 	else if(pressedKey === 'ArrowRight'){
-		if((nextLetter !== MAX_NUMBER_CELL)){
-			if((nextLetter+1) !== MAX_NUMBER_CELL){
-				row.childNodes[nextLetter].classList.remove("edit")
-				nextLetter++
-				row.childNodes[nextLetter].classList.add("edit")
-			// } else if (nextLetter === MAX_NUMBER_CELL){
-			// 	nextLetter = 0
+		if((letterIndex !== MAX_NUMBER_CELL)){
+			if((letterIndex+1) !== MAX_NUMBER_CELL){
+				row.childNodes[letterIndex].classList.remove("edit")
+				letterIndex++
+				row.childNodes[letterIndex].classList.add("edit")
 			}
 		}
 
