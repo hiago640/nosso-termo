@@ -10,7 +10,8 @@ h1 {
 #grid {
 	display: grid;
 	justify-content: center;
-	padding: 80px 0px;
+	padding-top: 20px;
+	padding-bottom: 40px;
 }
 
 body {
