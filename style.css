@@ -125,8 +125,9 @@ body {
 @media only screen and (max-device-width: 900px) {
 	h1 {
 		padding-bottom: 1px;
-		font-size: 25px;
+		font-size: 40px;
 		margin: 0;
+		margin-bottom: 10px;
 	}
 	/*#keyboard-cont {
 		width: 360px;
