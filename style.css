@@ -128,10 +128,10 @@ body {
 		font-size: 25px;
 		margin: 0;
 	}
-	#keyboard-cont {
+	/*#keyboard-cont {
 		width: 360px;
 		height: 160px;
-	}
+	}*/
 	.cell {
 		width: 48px;
 		height: 48px;
