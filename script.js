@@ -1,14 +1,41 @@
 const WORDS = [
 	"IMBIGO",
+	"INZAME",
+	"PREDA",
 	"MINDIGO",
+	"BRABO",
+	"FRANHA",
 	"ADEVOGADO",
+	"VRIDO",
+	"PINEU",
+	"BARUIO",
+	"BARAIO",
+	"QUEJO",
+	"CARAIO",
 	"MORTANDELA",
 	"IORGUTE",
 	"GUSPE",
 	"ASTERISTICO",
+	"CROFE",
+	"BUJAO",
+	"FOSFRO",
+	"BOIANO",
+	"CARDACO",
 	"CELEBRO",
+	"BILETE",
+	"CABEIO",
+	"ARVRE",
+	"DROBAR",
+	"MUINTO",
+	"ABRIDO",
+	"OREIA",
+	"PIRULA",
 	"BRUSINHA",
+	"SAGUADO",
 	"PAIAÇO",
+	"TRUCE",
+	"ABROBA",
+	"ARROIZ",
 	"BICABORNATO",
 	"FAZESSE",
 	"ARVRE",
@@ -59,7 +86,11 @@ const inputLetters = []
 
 const date = new Date()
 
-const secretWord = WORDS[Math.floor(Math.random() * WORDS.length)]
+let secretWord
+
+do {
+	secretWord = WORDS[Math.floor(Math.random() * WORDS.length)]
+} while (secretWord.length > 7)
 
 const MAX_NUMBER_ROWS = numberAttempts()
 let MAX_NUMBER_CELL = secretWord.length
@@ -85,9 +116,8 @@ function initGrid() {
 		grid.appendChild(row)
 
 		createCell(row, rowIndex)
-		
-		if(rowIndex === 1)
-			row.childNodes[0].classList.add("edit")
+
+		if (rowIndex === 1) row.childNodes[0].classList.add("edit")
 	}
 	countOccurrences()
 }
@@ -105,20 +135,19 @@ function createCell(row, rowIndex) {
 	}
 }
 
-
 let letterIndex = 0
 
 function insertLetter(letter) {
-	if (letterIndex+1 > MAX_NUMBER_CELL) return
+	if (letterIndex + 1 > MAX_NUMBER_CELL) return
 
-	console.log(letterIndex+1);
-	console.log(MAX_NUMBER_CELL);
-	
+	console.log(letterIndex + 1)
+	console.log(MAX_NUMBER_CELL)
+
 	let row = document.getElementById(`row-${attempt}`)
-	
+
 	let cell = row.childNodes[letterIndex]
 	cell.style.animation = "size-up 0.1s linear"
-	
+
 	cell.textContent = letter
 	cell.classList.remove("edit")
 
@@ -127,10 +156,10 @@ function insertLetter(letter) {
 	setTimeout(() => {
 		cell.style.animation = ""
 	}, 100)
-	
+
 	inputLetters.push(letter)
-	
-	if(letterIndex !== MAX_NUMBER_CELL)
+
+	if (letterIndex !== MAX_NUMBER_CELL)
 		row.childNodes[letterIndex].classList.add("edit")
 }
 
@@ -140,10 +169,10 @@ function deleteLetter() {
 	if (!isChecking) {
 		let row = document.getElementById(`row-${attempt}`)
 		inputLetters.pop()
-	
-		if(letterIndex !== MAX_NUMBER_CELL && letterIndex > 0)
+
+		if (letterIndex !== MAX_NUMBER_CELL && letterIndex > 0)
 			row.childNodes[letterIndex].classList.remove("edit")
-		
+
 		letterIndex--
 		let cell = row.childNodes[letterIndex]
 		cell.textContent = ""
@@ -152,19 +181,21 @@ function deleteLetter() {
 }
 
 function checkGuess() {
-
-	if (letterIndex !== MAX_NUMBER_CELL || inputLetters.length !== MAX_NUMBER_CELL) {
+	if (
+		letterIndex !== MAX_NUMBER_CELL ||
+		inputLetters.length !== MAX_NUMBER_CELL
+	) {
 		toastr.error("Não é uma palavra válida.")
 		isChecking = false
 		return
 	}
-	
+
 	isChecking = true
-	
+
 	countOccurrences()
 
 	let row = document.getElementById(`row-${attempt}`)
-	
+
 	let correctLetters = 0
 	for (let pos = 0; pos < secretWord.length; pos++) {
 		if (secretWord[pos] === inputLetters[pos]) correctLetters++
@@ -236,18 +267,18 @@ function validateColor(cell, pos) {
 }
 
 document.getElementById("keyboard-cont").addEventListener("click", (e) => {
-    const target = e.target
-    
-    if (!target.classList.contains("keyboard-button")) {
-        return
-    }
-    let key = target.textContent
+	const target = e.target
 
-    if (key === "Del") {
-        key = "Backspace"
-    } 
+	if (!target.classList.contains("keyboard-button")) {
+		return
+	}
+	let key = target.textContent
 
-    document.dispatchEvent(new KeyboardEvent("keydown", {'key': key}))
+	if (key === "Del") {
+		key = "Backspace"
+	}
+
+	document.dispatchEvent(new KeyboardEvent("keydown", { key: key }))
 })
 
 document.addEventListener(
@@ -260,51 +291,61 @@ document.addEventListener(
 		}
 
 		let pressedKey = String(e.key)
-		
+
 		if (pressedKey === "Enter") {
-			if(!isChecking)
-				checkGuess()
+			if (!isChecking) checkGuess()
 			return
 		}
-		
+
 		if (pressedKey === "Backspace" && letterIndex !== 0) {
 			deleteLetter()
 			return
 		}
 
 		keyArrows(pressedKey)
-		
+
 		let found = pressedKey.match(/[a-z]/gi)
 		if (!found || pressedKey.length > 1) return
 		else {
 			insertLetter(pressedKey.toUpperCase())
 		}
-
 	},
 	false
 )
 
-function keyArrows (pressedKey) {
+// document.addEventListener("click", (e) => {
+// 	let row = document.getElementById(`row-${attempt}`)
+
+// 	if (e.srcElement.id.split("-")[0] === "cell") {
+// 		let id = e.srcElement.id.split("-")[2]
+// 		console.log(letterIndex)
+// 		if (id - 1 != 0 && letterIndex < MAX_NUMBER_CELL) {
+// 			console.log(letterIndex)
+// 			row.childNodes[letterIndex].classList.remove("edit")
+// 			letterIndex = id - 1
+// 			row.childNodes[letterIndex].classList.add("edit")
+// 		}
+// 	}
+// })
+
+function keyArrows(pressedKey) {
 	let row = document.getElementById(`row-${attempt}`)
-	
-	if(pressedKey === 'ArrowLeft'){
-		if(letterIndex !== MAX_NUMBER_CELL && letterIndex > 0){
+
+	if (pressedKey === "ArrowLeft") {
+		if (letterIndex !== MAX_NUMBER_CELL && letterIndex > 0) {
 			row.childNodes[letterIndex].classList.remove("edit")
 			letterIndex--
 			row.childNodes[letterIndex].classList.add("edit")
 		}
-	}
-	else if(pressedKey === 'ArrowRight'){
-		if((letterIndex !== MAX_NUMBER_CELL)){
-			if((letterIndex+1) !== MAX_NUMBER_CELL){
+	} else if (pressedKey === "ArrowRight") {
+		if (letterIndex !== MAX_NUMBER_CELL) {
+			if (letterIndex + 1 !== MAX_NUMBER_CELL) {
 				row.childNodes[letterIndex].classList.remove("edit")
 				letterIndex++
 				row.childNodes[letterIndex].classList.add("edit")
 			}
 		}
-
-	}
-	else return
+	} else return
 }
 
 initGrid()
