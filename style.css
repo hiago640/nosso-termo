@@ -81,8 +81,12 @@ body {
 	padding: 0.5rem;
 	width: 58px;
 	height: 50px;
+	background: #4c4347;
 	margin: 0 2px;
 	cursor: pointer;
+	border: 0;
+	border-radius: 5px;
+	color: white;
 	text-transform: uppercase;
 }
 
@@ -121,10 +125,13 @@ body {
 @media only screen and (max-device-width: 900px) {
 	h1 {
 		padding-bottom: 1px;
-		font-size: 30px;
+		font-size: 25px;
 		margin: 0;
 	}
-
+	#keyboard-cont {
+		width: 360px;
+		height: 160px;
+	}
 	.cell {
 		width: 48px;
 		height: 48px;
@@ -140,7 +147,7 @@ body {
 
 	.keyboard-button {
 		width: 34px;
-		height: 67px;
+		height: 50px;
 	}
 
 	.row-active {
