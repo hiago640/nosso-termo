@@ -213,12 +213,33 @@ function checkGuess() {
 		setTimeout(() => {
 			let letterColor = validateColor(cell, pos)
 			cell.style.backgroundColor = letterColor
+			//shadeKeyBoard(cell.textContent, letterColor)
 			cell.style.animation = "spin2 0.35s linear"
 		}, delay)
 	}
 
 	correctLetters = 0
 }
+
+// function shadeKeyBoard(letter, color) {
+// 	for (const elem of document.getElementsByClassName("keyboard-button")) {
+// 		if (elem.textContent.toUpperCase() === letter.toUpperCase()) {
+
+//             let oldColor = elem.style.backgroundColor
+
+//             if (oldColor === "#3AA394") {
+// 				return
+// 			}
+
+// 			if (oldColor === "#D3AD69" && color !== "#3AA394") {
+// 				return
+// 			}
+
+// 			elem.style.backgroundColor = color
+// 			break
+// 		}
+// 	}
+// }
 
 function validadeCorrectWord(correctLetters) {
 	setTimeout(() => {

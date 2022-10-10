@@ -91,11 +91,11 @@ body {
 	padding: 0;
 }
 
-.second-row > .keyboard-button > img {
+/* .second-row > .keyboard-button > img {
 	width: 1.6rem;
 	margin-top: 5px;
 	filter: invert(100%);
-}
+} */
 
 .third-row > .keyboard-button:last-child {
 	margin-left: 10px;
@@ -120,7 +120,9 @@ body {
 
 @media only screen and (max-device-width: 900px) {
 	h1 {
-		padding-bottom: 25px;
+		padding-bottom: 1px;
+		font-size: 30px;
+		margin: 0;
 	}
 
 	.cell {
@@ -145,7 +147,16 @@ body {
 		box-shadow: 0px 0px 0px 4.5px #4c4347 inset;
 	}
 
+	/* .second-row > .keyboard-button:last-child {
+		font-size: 14px;
+	} */
+
 	.third-row > .keyboard-button:last-child {
 		width: 80px;
+	}
+
+	.row {
+		padding: 2px;
+		justify-content: space;
 	}
 }
