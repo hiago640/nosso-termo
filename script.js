@@ -182,11 +182,21 @@ function insertLetter(letter) {
 let isChecking = false
 
 function deleteLetter() {
-	console.log('entro');
 	if (!isChecking) {
 		let row = document.getElementById(`row-${attempt}`)
 		
 		if(letterIndex === 0 && row.childNodes[letterIndex].textContent === ''){
+			return
+		}
+		console.log(letterIndex);
+
+		if(letterIndex === MAX_NUMBER_CELL){
+			letterIndex--
+			let cell = row.childNodes[letterIndex]
+			cell.textContent = ""
+			cell.classList.add("edit")
+			inputLetters.splice(letterIndex, 1)
+
 			return
 		}
 
@@ -341,9 +351,6 @@ document.addEventListener(
 	(e) => {
 		let pressedKey = String(e.key)
 
-		console.log(inputLetters);
-		console.log(`letterIndex = ${letterIndex}`);
-
 		if (pressedKey === "Enter") {
 			if (!isChecking) checkGuess()
 			return
@@ -364,8 +371,6 @@ document.addEventListener(
 	},
 	false
 )
-
-
 
 function keyArrows(pressedKey) {
 	let row = document.getElementById(`row-${attempt}`)
