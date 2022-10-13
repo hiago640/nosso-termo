@@ -16,6 +16,7 @@ const WORDS = [
 	"IORGUTE",
 	"GUSPE",
 	"ASTERISTICO",
+	"CRONE",
 	"CROFE",
 	"BUJAO",
 	"FOSFRO",
@@ -145,8 +146,7 @@ function insertLetter(letter) {
 	let cell = row.childNodes[letterIndex]
 	cell.style.animation = "size-up 0.1s linear"
 
-	if(cell.textContent != '')
-		inputLetters.splice(letterIndex, 1)
+	if (cell.textContent != "") inputLetters.splice(letterIndex, 1)
 
 	cell.textContent = letter
 	cell.classList.remove("edit")
@@ -161,22 +161,24 @@ function insertLetter(letter) {
 
 	if (letterIndex !== MAX_NUMBER_CELL)
 		row.childNodes[letterIndex].classList.add("edit")
-	
-	if ((letterIndex === MAX_NUMBER_CELL) && (inputLetters.length !== MAX_NUMBER_CELL)){
+
+	if (
+		letterIndex === MAX_NUMBER_CELL &&
+		inputLetters.length !== MAX_NUMBER_CELL
+	) {
 		let unfilledCells = []
 		let i = 0
-		for(cell of row.childNodes){
-			if(cell.textContent === ""){
+		for (cell of row.childNodes) {
+			if (cell.textContent === "") {
 				unfilledCells.push(cell)
 				break
 			}
-			i++;
+			i++
 		}
 
 		unfilledCells[0].classList.add("edit")
 		letterIndex = i
 	}
-
 }
 
 let isChecking = false
@@ -184,13 +186,12 @@ let isChecking = false
 function deleteLetter() {
 	if (!isChecking) {
 		let row = document.getElementById(`row-${attempt}`)
-		
-		if(letterIndex === 0 && row.childNodes[letterIndex].textContent === ''){
+
+		if (letterIndex === 0 && row.childNodes[letterIndex].textContent === '') {
 			return
 		}
-		console.log(letterIndex);
 
-		if(letterIndex === MAX_NUMBER_CELL){
+		if (letterIndex === MAX_NUMBER_CELL) {
 			letterIndex--
 			let cell = row.childNodes[letterIndex]
 			cell.textContent = ""
@@ -200,16 +201,16 @@ function deleteLetter() {
 			return
 		}
 
-		if(row.childNodes[letterIndex].textContent === ''){
+		if (row.childNodes[letterIndex].textContent === "") {
 			row.childNodes[letterIndex].classList.remove("edit")
 			letterIndex--
-			
+
 			let cell = row.childNodes[letterIndex]
 			cell.textContent = ""
 			cell.classList.add("edit")
 			inputLetters.splice(letterIndex, 1)
 		} else {
-			row.childNodes[letterIndex].textContent = ''
+			row.childNodes[letterIndex].textContent = ""
 			inputLetters.splice(letterIndex, 1)
 		}
 	}
@@ -229,9 +230,8 @@ function checkGuess() {
 	let row = document.getElementById(`row-${attempt}`)
 
 	let correctLetters = 0
-	for (let pos = 0; pos < secretWord.length; pos++) {
+	for (let pos = 0; pos < secretWord.length; pos++)
 		if (secretWord[pos] === inputLetters[pos]) correctLetters++
-	}
 
 	validadeCorrectWord(correctLetters)
 
@@ -256,23 +256,19 @@ function checkGuess() {
 let letterCorrectList = []
 function keyBoardColor(letter, color) {
 	for (const elem of document.getElementsByClassName("keyboard-button")) {
-		if (
-			elem.textContent.toUpperCase() === letter.toUpperCase() &&
-			!letterCorrectList.includes(letter)
-		) {
+		if (elem.textContent.toUpperCase() === letter.toUpperCase() && !letterCorrectList.includes(letter) ) {
 			let oldColor = elem.style.backgroundColor
 
 			if (oldColor === "#3AA394") {
 				return
 			}
 
-			if (oldColor === "#D3AD69" && color !== "#3AA394") {
+			if (oldColor === "rgb(211, 173, 105)" && color !== "#3AA394") {
 				return
 			}
 
 			elem.style.backgroundColor = color
-			if (color === "#3AA394" || color === "#D3AD69")
-				letterCorrectList.push(letter)
+			if (color === "#3AA394") letterCorrectList.push(letter)
 
 			break
 		}
@@ -316,16 +312,10 @@ function countOccurrences() {
 function validateColor(cell, pos) {
 	let color = "#312A2C"
 
-	if (
-		secretWord.match(cell.textContent) &&
-		mapOccurrences.get(cell.textContent) > 0
-	) {
+	if (secretWord.match(cell.textContent) && mapOccurrences.get(cell.textContent) > 0) {
 		color = cell.textContent === secretWord[pos] ? "#3AA394" : "#D3AD69"
 
-		mapOccurrences.set(
-			cell.textContent,
-			mapOccurrences.get(cell.textContent) - 1
-		)
+		mapOccurrences.set(cell.textContent, mapOccurrences.get(cell.textContent) - 1 )
 	}
 
 	return color
@@ -377,12 +367,11 @@ function keyArrows(pressedKey) {
 
 	if (pressedKey === "ArrowLeft") {
 		if (letterIndex > 0) {
-			
-			if(letterIndex !== MAX_NUMBER_CELL)
+			if (letterIndex !== MAX_NUMBER_CELL)
 				row.childNodes[letterIndex].classList.remove("edit")
-			
+
 			letterIndex--
-	
+
 			row.childNodes[letterIndex].classList.add("edit")
 		}
 	} else if (pressedKey === "ArrowRight") {
