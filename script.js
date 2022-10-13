@@ -140,9 +140,6 @@ let letterIndex = 0
 function insertLetter(letter) {
 	if (letterIndex + 1 > MAX_NUMBER_CELL) return
 
-	console.log(letterIndex + 1)
-	console.log(MAX_NUMBER_CELL)
-
 	let row = document.getElementById(`row-${attempt}`)
 
 	let cell = row.childNodes[letterIndex]
@@ -213,7 +210,7 @@ function checkGuess() {
 		setTimeout(() => {
 			let letterColor = validateColor(cell, pos)
 			cell.style.backgroundColor = letterColor
-			//shadeKeyBoard(cell.textContent, letterColor)
+			keyBoardColor(cell.textContent, letterColor)
 			cell.style.animation = "spin2 0.35s linear"
 		}, delay)
 	}
@@ -221,25 +218,31 @@ function checkGuess() {
 	correctLetters = 0
 }
 
-// function shadeKeyBoard(letter, color) {
-// 	for (const elem of document.getElementsByClassName("keyboard-button")) {
-// 		if (elem.textContent.toUpperCase() === letter.toUpperCase()) {
+let letterCorrectList = []
+function keyBoardColor(letter, color) {
+	for (const elem of document.getElementsByClassName("keyboard-button")) {
+		if (
+			elem.textContent.toUpperCase() === letter.toUpperCase() &&
+			!letterCorrectList.includes(letter)
+		) {
+			let oldColor = elem.style.backgroundColor
 
-//             let oldColor = elem.style.backgroundColor
+			if (oldColor === "#3AA394") {
+				return
+			}
 
-//             if (oldColor === "#3AA394") {
-// 				return
-// 			}
+			if (oldColor === "#D3AD69" && color !== "#3AA394") {
+				return
+			}
 
-// 			if (oldColor === "#D3AD69" && color !== "#3AA394") {
-// 				return
-// 			}
+			elem.style.backgroundColor = color
+			if (color === "#3AA394" || color === "#D3AD69")
+				letterCorrectList.push(letter)
 
-// 			elem.style.backgroundColor = color
-// 			break
-// 		}
-// 	}
-// }
+			break
+		}
+	}
+}
 
 function validadeCorrectWord(correctLetters) {
 	setTimeout(() => {
@@ -250,15 +253,21 @@ function validadeCorrectWord(correctLetters) {
 			attempt++
 			letterIndex = 0
 
-			let nextRow = document.getElementById(`row-${attempt}`)
-			nextRow.childNodes[0].classList.add("edit")
+			if (attempt < MAX_NUMBER_ROWS + 1) {
+				let nextRow = document.getElementById(`row-${attempt}`)
+				nextRow.childNodes[0].classList.add("edit")
 
-			for (let cell of nextRow.childNodes) {
-				cell.classList.add("row-active")
-				cell.classList.remove("inative")
+				for (let cell of nextRow.childNodes) {
+					cell.classList.add("row-active")
+					cell.classList.remove("inative")
+				}
+
+				inputLetters.length = 0
+			} else {
+				toastr.error("Você não conseguiu acertar a palavra do dia!")
+				toastr.info(`A Palavra correta é: "${secretWord}"`)
+				return
 			}
-
-			inputLetters.length = 0
 		}
 		isChecking = false
 	}, 350 * secretWord.length)
@@ -305,12 +314,6 @@ document.getElementById("keyboard-cont").addEventListener("click", (e) => {
 document.addEventListener(
 	"keydown",
 	(e) => {
-		if (attempt === MAX_NUMBER_ROWS + 1) {
-			toastr.error("Você não conseguiu acertar a palavra do dia!")
-			toastr.info(`A Palavra correta é: "${secretWord}"`)
-			return
-		}
-
 		let pressedKey = String(e.key)
 
 		if (pressedKey === "Enter") {
@@ -333,21 +336,6 @@ document.addEventListener(
 	},
 	false
 )
-
-// document.addEventListener("click", (e) => {
-// 	let row = document.getElementById(`row-${attempt}`)
-
-// 	if (e.srcElement.id.split("-")[0] === "cell") {
-// 		let id = e.srcElement.id.split("-")[2]
-// 		console.log(letterIndex)
-// 		if (id - 1 != 0 && letterIndex < MAX_NUMBER_CELL) {
-// 			console.log(letterIndex)
-// 			row.childNodes[letterIndex].classList.remove("edit")
-// 			letterIndex = id - 1
-// 			row.childNodes[letterIndex].classList.add("edit")
-// 		}
-// 	}
-// })
 
 function keyArrows(pressedKey) {
 	let row = document.getElementById(`row-${attempt}`)
