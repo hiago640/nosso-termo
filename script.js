@@ -99,7 +99,7 @@ let MAX_NUMBER_CELL = secretWord.length
 let attempt = 1
 
 function numberAttempts() {
-	let minumumAttempt = 6
+	let minumumAttempt = 7
 
 	return Math.round(
 		secretWord.length <= 7
@@ -176,8 +176,10 @@ function insertLetter(letter) {
 			i++
 		}
 
-		unfilledCells[0].classList.add("edit")
-		letterIndex = i
+		if(unfilledCells.length > 0) {
+			unfilledCells[0].classList.add("edit")
+			letterIndex = i
+		}
 	}
 }
 
@@ -341,6 +343,8 @@ document.addEventListener(
 	(e) => {
 		let pressedKey = String(e.key)
 
+		console.log(inputLetters);
+
 		if (pressedKey === "Enter") {
 			if (!isChecking) checkGuess()
 			return
@@ -361,6 +365,20 @@ document.addEventListener(
 	},
 	false
 )
+
+document.addEventListener("click", (e) => {
+	let row = document.getElementById(`row-${attempt}`)
+
+	if (e.srcElement.id.split("-")[0] === "cell" && e.srcElement.id.split("-")[1] == attempt) {
+		
+		let id = e.srcElement.id.split("-")[2]
+		if (id != 0) {
+			row.childNodes[letterIndex].classList.remove("edit")
+			letterIndex = id - 1
+			row.childNodes[letterIndex].classList.add("edit")
+		}
+	}
+})
 
 function keyArrows(pressedKey) {
 	let row = document.getElementById(`row-${attempt}`)
