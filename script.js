@@ -21,6 +21,9 @@ const WORDS = [
 	"BUJAO",
 	"FOSFRO",
 	"BOIANO",
+	"AVOA",
+	"FLAUDA",
+	"POBREMA",
 	"CARDACO",
 	"CELEBRO",
 	"BILETE",
@@ -33,7 +36,7 @@ const WORDS = [
 	"PIRULA",
 	"BRUSINHA",
 	"SAGUADO",
-	"PAIAÇO",
+	"PAIACO",
 	"TRUCE",
 	"ABROBA",
 	"ARROIZ",
@@ -48,7 +51,7 @@ const WORDS = [
 	"TEVELISAO",
 	"PIRUCA",
 	"MOLUSCULO",
-	"LOSÂNGULO",
+	"LOSANGULO",
 	"COCRANTE",
 	"COCRETE",
 	"DIBRE",
@@ -58,7 +61,7 @@ const WORDS = [
 	"TOCHICO",
 	"CISNEI",
 	"CABELELEIRO",
-	"CADARÇO",
+	"CARDACO",
 	"SOMBRANCELHA",
 	"CONHECIDENCIA",
 	"GOGUMELO",
@@ -392,7 +395,7 @@ function keyArrows(pressedKey) {
 
 			row.childNodes[letterIndex].classList.add("edit")
 		}
-	} else if (pressedKey === "ArrowRight") {
+	} else if (pressedKey === "ArrowRight" || pressedKey === " ") {
 		if (letterIndex !== MAX_NUMBER_CELL) {
 			if (letterIndex + 1 !== MAX_NUMBER_CELL) {
 				row.childNodes[letterIndex].classList.remove("edit")
