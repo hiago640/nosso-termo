@@ -30,6 +30,7 @@ const WORDS = [
 	"CABEIO",
 	"ARVRE",
 	"DROBAR",
+	"PREFUME",
 	"MUINTO",
 	"ABRIDO",
 	"OREIA",
